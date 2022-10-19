@@ -30,8 +30,10 @@ type RingSlice[T any] interface {
 	RemoveHead(n int)
 	// RemoveTail remove n item from tail
 	RemoveTail(n int)
-	// Cap return the max items num that this ring-slice can hold
+	// Cap returns the totla items num that this ring-slice can hold
 	Cap() int
+    // RestSpace returns the rest items num that can be append
+	RestSpace() int
 }
 ```
 

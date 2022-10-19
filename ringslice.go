@@ -26,8 +26,9 @@ type RingSlice[T any] interface {
 	RemoveHead(n int)
 	// RemoveTail remove n item from tail
 	RemoveTail(n int)
-	// Cap return the max items num that this ring-slice can hold
-	Cap() int
+	// Cap returns the totla items num that this ring-slice can hold	Cap() int
+	// RestSpace return the max items num that this ring-slice can append
+	RestSpace() int
 }
 
 type ringSlice[T any] struct {
@@ -77,7 +78,7 @@ func (r *ringSlice[T]) Set(index int, item T) {
 }
 
 func (r *ringSlice[T]) AppendTail(items ...T) {
-	if len(items) > (r.Cap() - r.Len()) {
+	if len(items) > r.RestSpace() {
 		panic(NoSpaceError)
 	}
 	for i := range items {
@@ -88,7 +89,7 @@ func (r *ringSlice[T]) AppendTail(items ...T) {
 }
 
 func (r *ringSlice[T]) AppendHead(item T) {
-	if 1 > (r.Cap() - r.Len()) {
+	if 1 > r.RestSpace() {
 		panic(NoSpaceError)
 	}
 	r.size += 1
@@ -141,6 +142,10 @@ func (r *ringSlice[T]) Len() int {
 
 func (r *ringSlice[T]) Cap() int {
 	return len(r.slice)
+}
+
+func (r *ringSlice[T]) RestSpace() int {
+	return r.Cap() - r.Len()
 }
 
 func (r *ringSlice[T]) increaseTail() {
