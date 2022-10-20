@@ -235,23 +235,31 @@ func TestRingSlice_NegativeSet(t *testing.T) {
 	tests := []struct {
 		name  string
 		items []int
+		size  int
 		index int
+		wanti int
 		want  []int
 	}{
 		{
 			name:  "Negative Set 1",
 			items: []int{1, 2, 3},
+			size:  10,
 			index: -1,
+			wanti: 3,
 			want:  []int{1, 2, -1},
 		}, {
 			name:  "Negative Set 2",
 			items: []int{1, 2, 3},
+			size:  3,
 			index: -2,
+			wanti: 2,
 			want:  []int{1, -2, 3},
 		}, {
 			name:  "Negative Set 3",
 			items: []int{1, 2, 3},
+			size:  10,
 			index: -3,
+			wanti: 1,
 			want:  []int{-3, 2, 3},
 		},
 	}
@@ -259,7 +267,52 @@ func TestRingSlice_NegativeSet(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			r := NewRingSlice[int](len(tt.items), nil)
 			r.AppendTail(tt.items...)
+			if r.Get(tt.index) != tt.wanti {
+				t.Errorf("get index [%d], got [%d], want [%d]", tt.index, r.Get(tt.index), tt.wanti)
+			}
 			r.Set(tt.index, tt.index)
+			check(t, r, tt.want)
+		})
+	}
+}
+
+func TestRingSlice_Swap(t *testing.T) {
+	tests := []struct {
+		name  string
+		items []int
+		size  int
+		i     int
+		j     int
+		want  []int
+	}{
+		{
+			name:  "Swap 1",
+			items: []int{1, 2, 3},
+			size:  10,
+			i:     -1,
+			j:     2,
+			want:  []int{1, 2, 3},
+		}, {
+			name:  "Swap 2",
+			items: []int{1, 2, 3},
+			size:  3,
+			i:     1,
+			j:     2,
+			want:  []int{1, 3, 2},
+		}, {
+			name:  "Swap 3",
+			items: []int{1, 2, 3},
+			size:  10,
+			i:     -1,
+			j:     0,
+			want:  []int{3, 2, 1},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := NewRingSlice[int](len(tt.items), nil)
+			r.AppendTail(tt.items...)
+			r.Swap(tt.i, tt.j)
 			check(t, r, tt.want)
 		})
 	}

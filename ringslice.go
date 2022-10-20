@@ -62,18 +62,16 @@ func NewRingSlice[T any](size int, less func(i, j T) bool) RingSlice[T] {
 }
 
 func (r *ringSlice[T]) Get(index int) T {
-	r.checkIndex(index)
+	i := r.getAbsoluteIndex(index)
 	h := int64(r.head)
 	l := int64(r.Cap())
-	i := int64(index)
 	return r.slice[int((h+i+l)%l)]
 }
 
 func (r *ringSlice[T]) Set(index int, item T) {
-	r.checkIndex(index)
+	i := r.getAbsoluteIndex(index)
 	h := int64(r.head)
 	l := int64(r.Cap())
-	i := int64(index)
 	r.slice[int((h+i+l)%l)] = item
 }
 
@@ -128,11 +126,13 @@ func (r *ringSlice[T]) Less(i, j int) bool {
 	return r.less(r.Get(i), r.Get(j))
 }
 
-func (r *ringSlice[T]) Swap(i, j int) {
-	r.checkIndex(i)
-	r.checkIndex(j)
-	realI := (r.head + i) % r.Cap()
-	realJ := (r.head + j) % r.Cap()
+func (r *ringSlice[T]) Swap(rawI, rawJ int) {
+	i := r.getAbsoluteIndex(rawI)
+	j := r.getAbsoluteIndex(rawJ)
+	h := int64(r.head)
+	c := int64(r.Cap())
+	realI := int((h + i) % c)
+	realJ := int((h + j) % c)
 	r.slice[realI], r.slice[realJ] = r.slice[realJ], r.slice[realI]
 }
 
@@ -176,4 +176,9 @@ func (r *ringSlice[T]) checkIndex(index int) {
 	if index >= r.Len() || index < -r.Len() {
 		panic(fmt.Errorf("runtime error:index out of range [%d] with length %d", index, r.Len()))
 	}
+}
+
+func (r *ringSlice[T]) getAbsoluteIndex(index int) int64 {
+	r.checkIndex(index)
+	return (int64(index) + int64(r.Len())) % int64(r.Len())
 }
