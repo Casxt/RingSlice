@@ -16,23 +16,22 @@ type RingSlice[T any] interface {
 	// Less(i, j int) bool
 	// Swap(i, j int)
 	sort.Interface
-	// Get item from index, index must less than Len()
+	// Get item from index, index must less than length
 	Get(index int) T
-	// Set item to index, index must less than Len()
+	// Set item to index, index must less than length
 	Set(index int, item T)
 	// AppendTail append items to tail,
-    // Notice: panic if space not enough (Cap() - Len()) < len(items)
+	// Notice: panic if space not enough (Cap() - Len()) < len(items)
 	AppendTail(items ...T)
 	// AppendHead append item to head
-    // Notice: panic if space not enough (Cap() - Len()) < 1
+	// Notice: panic if space not enough (Cap() - Len()) < 1
 	AppendHead(item T)
-	// RemoveHead remove n item from head
+	// RemoveHead remove n item from head, if n > Len() will remove all item.
 	RemoveHead(n int)
-	// RemoveTail remove n item from tail
+	// RemoveTail remove n item from tail, if n > Len() will remove all item.
 	RemoveTail(n int)
-	// Cap returns the totla items num that this ring-slice can hold
-	Cap() int
-    // RestSpace returns the rest items num that can be append
+	// Cap returns the totla items num that this ring-slice can hold	Cap() int
+	// RestSpace return the max items num that this ring-slice can append
 	RestSpace() int
 }
 ```
