@@ -1,10 +1,10 @@
 # RingSlice
-RingSlice is designed for slide window purposes, which provides a slice-like interface that supports random access, sorting, and binary search. Data can be dropped or appended from the head or tail like a queue but without any memory reallocate because of the data storage in a ring buffer.
+RingSlice provides a slice-like interface that supports queue io, random access, sorting, and binary search. Data can be dropped or appended from both head and tail like a queue but without any memory reallocate because of the data storage in a ring buffer.
 
 # Concept
 - RingSlice works like a slice and supports random access.
 - RingSlice works like a slice and supports `sort` and `search`.
-- RingSlice supports drop data from both sides (head and tail) of the slice and all released space can be reused. (If you drop the original slice head, that memory cannot be reused directly.)
+- RingSlice supports drop data from both sides (head and tail) of the slice and the released space can be reused. (If you drop the original slice head, that memory cannot be reused directly.)
 - RingSlice can append data from both sides (head or tail) of the slice.
 - RingSlice will not reallocate memory when `append` or `remove` items.
 
