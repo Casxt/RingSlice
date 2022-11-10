@@ -8,9 +8,9 @@ import (
 
 type RingSlice[T any] interface {
 	// Interface sort.Interface contain
-	// Len() int return items num that this ring-slice already hold
-	// Less(i, j int) bool
-	// Swap(i, j int)
+	// Len() int: return items num that this ring-slice already hold
+	// Less(i, j int) bool: compare two items in sepcific position i/j, panic if comparator not set.
+	// Swap(i, j int): swap items in sepcific position i/j.
 	sort.Interface
 	// Get item from index, index must less than length
 	Get(index int) T
