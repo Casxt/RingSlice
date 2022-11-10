@@ -22,9 +22,9 @@ type RingSlice[T any] interface {
 	// AppendHead append item to head
 	// Notice: panic if space not enough (Cap() - Len()) < 1
 	AppendHead(item T)
-	// RemoveHead remove n item from head
+	// RemoveHead remove n item from head, if n > Len() will remove all item.
 	RemoveHead(n int)
-	// RemoveTail remove n item from tail
+	// RemoveTail remove n item from tail, if n > Len() will remove all item.
 	RemoveTail(n int)
 	// Cap returns the totla items num that this ring-slice can hold	Cap() int
 	// RestSpace return the max items num that this ring-slice can append
